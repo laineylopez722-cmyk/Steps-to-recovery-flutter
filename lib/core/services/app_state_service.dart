@@ -165,9 +165,6 @@ class AppStateService extends ChangeNotifier {
     if (_sobrietyDate != null) {
       unawaited(
         MilestoneService().checkAndScheduleApproachNotifications(_sobrietyDate!),
-        MilestoneService().checkAndScheduleApproachNotifications(
-          _sobrietyDate!,
-        ),
       );
     }
 
