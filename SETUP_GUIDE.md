@@ -44,6 +44,8 @@ flutter doctor --android-licenses
 
 ## Project Setup
 
+> **Command convention:** Use `./tool/flutterw.ps1` as the canonical way to run Flutter commands in this repo. Direct `flutter` usage is optional only when Flutter is already available on your PATH.
+
 ### 1. Navigate to the project directory
 
 ```powershell
@@ -53,20 +55,20 @@ cd C:\Users\H\Steps-to-recovery-flutter
 ### 2. Get dependencies
 
 ```powershell
-flutter pub get
+./tool/flutterw.ps1 pub get
 ```
 
 ### 3. Run the app
 
 ```powershell
 # Run on connected device or emulator
-flutter run
+./tool/flutterw.ps1 run
 
 # Debug mode
-flutter run --debug
+./tool/flutterw.ps1 run --debug
 
 # Release mode (for production-like testing)
-flutter run --release
+./tool/flutterw.ps1 run --release
 ```
 
 ## Build Outputs
@@ -74,7 +76,7 @@ flutter run --release
 ### Debug APK
 
 ```powershell
-flutter build apk --debug
+./tool/flutterw.ps1 build apk --debug
 ```
 
 Output: `build/app/outputs/flutter-apk/app-debug.apk`
@@ -82,7 +84,7 @@ Output: `build/app/outputs/flutter-apk/app-debug.apk`
 ### Release APK
 
 ```powershell
-flutter build apk --release
+./tool/flutterw.ps1 build apk --release
 ```
 
 Output: `build/app/outputs/flutter-apk/app-release.apk`
@@ -90,7 +92,7 @@ Output: `build/app/outputs/flutter-apk/app-release.apk`
 ### Split APKs (smaller APKs per ABI)
 
 ```powershell
-flutter build apk --release --split-per-abi
+./tool/flutterw.ps1 build apk --release --split-per-abi
 ```
 
 Output: `build/app/outputs/flutter-apk/` (multiple ABI-specific APK files)
@@ -98,7 +100,7 @@ Output: `build/app/outputs/flutter-apk/` (multiple ABI-specific APK files)
 ### Android App Bundle (Play Store upload)
 
 ```powershell
-flutter build appbundle --release
+./tool/flutterw.ps1 build appbundle --release
 ```
 
 Output: `build/app/outputs/bundle/release/app-release.aab`
@@ -108,25 +110,25 @@ Output: `build/app/outputs/bundle/release/app-release.aab`
 ### Android
 
 ```powershell
-flutter run -d android
+./tool/flutterw.ps1 run -d android
 ```
 
 ### iOS (macOS only)
 
 ```powershell
-flutter run -d ios
+./tool/flutterw.ps1 run -d ios
 ```
 
 ### Web
 
 ```powershell
-flutter run -d chrome
+./tool/flutterw.ps1 run -d chrome
 ```
 
 ### Windows
 
 ```powershell
-flutter run -d windows
+./tool/flutterw.ps1 run -d windows
 ```
 
 ## Common Issues & Solutions
@@ -146,9 +148,9 @@ flutter run -d windows
 cd android
 ./gradlew clean
 cd ..
-flutter clean
-flutter pub get
-flutter run
+./tool/flutterw.ps1 clean
+./tool/flutterw.ps1 pub get
+./tool/flutterw.ps1 run
 ```
 
 **Solution (Windows):**
@@ -157,9 +159,9 @@ flutter run
 cd android
 gradlew.bat clean
 cd ..
-flutter clean
-flutter pub get
-flutter run
+./tool/flutterw.ps1 clean
+./tool/flutterw.ps1 pub get
+./tool/flutterw.ps1 run
 ```
 
 ### Issue: Package conflicts
@@ -167,8 +169,8 @@ flutter run
 **Solution:**
 
 ```powershell
-flutter clean
-flutter pub get
+./tool/flutterw.ps1 clean
+./tool/flutterw.ps1 pub get
 ```
 
 ### Issue: Android licenses not accepted
@@ -236,19 +238,25 @@ lib/
 ### Run all tests
 
 ```powershell
-flutter test
+./tool/flutterw.ps1 test
 ```
 
 ### Run a specific test file
 
 ```powershell
-flutter test test/my_test.dart
+./tool/flutterw.ps1 test test/my_test.dart
 ```
 
 ### Run with coverage
 
 ```powershell
-flutter test --coverage
+./tool/flutterw.ps1 test --coverage
+```
+
+## Static Analysis
+
+```powershell
+./tool/flutterw.ps1 analyze
 ```
 
 ## Code Generation
@@ -279,7 +287,7 @@ SUPABASE_ANON_KEY=your_key_here
 5. Profile with:
 
 ```powershell
-flutter run --profile
+./tool/flutterw.ps1 run --profile
 ```
 
 ## Resources
