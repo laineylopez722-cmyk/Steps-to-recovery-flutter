@@ -8,7 +8,6 @@ class MindfulnessTrack {
   final String category;
   final Duration duration;
   final String audioUrl;
-  final String? localAssetPath;
   final MindfulnessCategory mindfulnessCategory;
   final bool isPremium;
 
@@ -19,7 +18,6 @@ class MindfulnessTrack {
     required this.category,
     required this.duration,
     required this.audioUrl,
-    this.localAssetPath,
     this.mindfulnessCategory = MindfulnessCategory.breathing,
     this.isPremium = false,
   });

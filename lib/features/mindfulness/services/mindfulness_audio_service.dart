@@ -3,14 +3,24 @@ import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:steps_recovery_flutter/features/mindfulness/models/mindfulness_models.dart';
 
+class MindfulnessAudioSourceException implements Exception {
+  final String userMessage;
+
+  const MindfulnessAudioSourceException(this.userMessage);
+
+  @override
+  String toString() => userMessage;
+}
+
 /// Audio service for mindfulness playback
 class MindfulnessAudioService extends ChangeNotifier {
-  static final MindfulnessAudioService _instance = MindfulnessAudioService._internal();
+  static final MindfulnessAudioService _instance =
+      MindfulnessAudioService._internal();
   factory MindfulnessAudioService() => _instance;
   MindfulnessAudioService._internal();
 
   final AudioPlayer _player = AudioPlayer();
-  
+
   MindfulnessTrack? _currentTrack;
   MindfulnessPlayerState _state = MindfulnessPlayerState.idle;
   Duration _position = Duration.zero;
@@ -25,7 +35,7 @@ class MindfulnessAudioService extends ChangeNotifier {
   Duration get duration => _duration;
   double get volume => _volume;
   double get speed => _speed;
-  
+
   bool get isPlaying => _state == MindfulnessPlayerState.playing;
   bool get isLoading => _state == MindfulnessPlayerState.loading;
 
@@ -35,9 +45,11 @@ class MindfulnessAudioService extends ChangeNotifier {
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration(
       avAudioSessionCategory: AVAudioSessionCategory.playback,
-      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
+      avAudioSessionCategoryOptions:
+          AVAudioSessionCategoryOptions.duckOthers,
       avAudioSessionMode: AVAudioSessionMode.defaultMode,
-      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionRouteSharingPolicy:
+          AVAudioSessionRouteSharingPolicy.defaultPolicy,
       avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
       androidAudioAttributes: AndroidAudioAttributes(
         contentType: AndroidAudioContentType.speech,
@@ -65,14 +77,13 @@ class MindfulnessAudioService extends ChangeNotifier {
         notifyListeners();
       }
     });
-
   }
 
   void _updateState(PlayerState playerState) {
     if (playerState.playing) {
       _state = MindfulnessPlayerState.playing;
     } else if (playerState.processingState == ProcessingState.loading ||
-               playerState.processingState == ProcessingState.buffering) {
+        playerState.processingState == ProcessingState.buffering) {
       _state = MindfulnessPlayerState.loading;
     } else if (playerState.processingState == ProcessingState.completed) {
       _state = MindfulnessPlayerState.completed;
@@ -89,25 +100,41 @@ class MindfulnessAudioService extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Use local asset if available, otherwise use URL
-      if (track.localAssetPath != null) {
-        await _player.setAsset(track.localAssetPath!);
-      } else {
-        await _player.setUrl(track.audioUrl);
+      final sourceUrl = track.audioUrl.trim();
+      final sourceUri = Uri.tryParse(sourceUrl);
+
+      final hasValidHttpScheme =
+          sourceUri != null &&
+          (sourceUri.scheme == 'http' || sourceUri.scheme == 'https');
+      final hasHost = sourceUri?.host.isNotEmpty ?? false;
+
+      if (sourceUrl.isEmpty ||
+          sourceUrl.contains('example.com') ||
+          !hasValidHttpScheme ||
+          !hasHost) {
+        throw MindfulnessAudioSourceException(
+          'This session does not have a playable audio source yet.',
+        );
       }
+      await _player.setUrl(sourceUrl);
       _state = MindfulnessPlayerState.idle;
       notifyListeners();
     } catch (e) {
       _state = MindfulnessPlayerState.error;
       notifyListeners();
-      rethrow;
+      if (e is MindfulnessAudioSourceException) {
+        rethrow;
+      }
+      throw MindfulnessAudioSourceException(
+        'Could not load "${track.title}". Please check your internet connection and try again.',
+      );
     }
   }
 
   /// Play current track
   Future<void> play() async {
     if (_currentTrack == null) return;
-    
+
     try {
       await _player.play();
       _state = MindfulnessPlayerState.playing;
