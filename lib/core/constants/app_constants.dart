@@ -112,8 +112,12 @@ class AppConstants {
 }
 
 abstract final class AppStoreLinks {
-  static const String appStore =
-      'https://apps.apple.com/app/steps-to-recovery/idXXXXXXXXX';
+  // Configure via --dart-define=APP_STORE_URL for production builds.
+  // Keep empty by default so non-production builds never ship a fake public URL.
+  static const String appStore = String.fromEnvironment(
+    'APP_STORE_URL',
+    defaultValue: '',
+  );
   static const String playStore =
       'https://play.google.com/store/apps/details?id=com.stepstorecovery.app';
   static const String shareUrl = 'https://stepstorecovery.app';
