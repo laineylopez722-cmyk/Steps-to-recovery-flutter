@@ -25,8 +25,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: 'Simple deep breathing exercise for calm and centering',
       category: 'Breathing',
       duration: Duration(minutes: 3, seconds: 30),
-      audioUrl: 'https://example.com/audio/deep-breathing.mp3',
-      localAssetPath: 'assets/audio/breathing/deep_breathing.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
       mindfulnessCategory: MindfulnessCategory.breathing,
     ),
     const MindfulnessTrack(
@@ -35,8 +34,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: '4-4-4-4 breathing pattern for stress relief',
       category: 'Breathing',
       duration: Duration(minutes: 5),
-      audioUrl: 'https://example.com/audio/box-breathing.mp3',
-      localAssetPath: 'assets/audio/breathing/box_breathing.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
       mindfulnessCategory: MindfulnessCategory.breathing,
     ),
     const MindfulnessTrack(
@@ -45,8 +43,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: '5-minute progressive relaxation',
       category: 'Body Scan',
       duration: Duration(minutes: 5),
-      audioUrl: 'https://example.com/audio/body-scan-quick.mp3',
-      localAssetPath: 'assets/audio/body_scan/quick_scan.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
       mindfulnessCategory: MindfulnessCategory.bodyScan,
     ),
     const MindfulnessTrack(
@@ -55,8 +52,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: 'Complete head-to-toe body awareness',
       category: 'Body Scan',
       duration: Duration(minutes: 15),
-      audioUrl: 'https://example.com/audio/body-scan-full.mp3',
-      localAssetPath: 'assets/audio/body_scan/full_scan.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
       mindfulnessCategory: MindfulnessCategory.bodyScan,
     ),
     const MindfulnessTrack(
@@ -65,8 +61,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: 'Classic grounding technique for anxiety',
       category: 'Grounding',
       duration: Duration(minutes: 4),
-      audioUrl: 'https://example.com/audio/54321.mp3',
-      localAssetPath: 'assets/audio/grounding/54321.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
       mindfulnessCategory: MindfulnessCategory.grounding,
     ),
     const MindfulnessTrack(
@@ -75,8 +70,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: 'Ride the wave of craving without acting',
       category: 'Craving Surfing',
       duration: Duration(minutes: 10),
-      audioUrl: 'https://example.com/audio/craving-surf.mp3',
-      localAssetPath: 'assets/audio/craving/craving_surf.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
       mindfulnessCategory: MindfulnessCategory.craving,
     ),
     const MindfulnessTrack(
@@ -85,8 +79,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: 'Drift off with gentle guidance',
       category: 'Sleep',
       duration: Duration(minutes: 20),
-      audioUrl: 'https://example.com/audio/sleep.mp3',
-      localAssetPath: 'assets/audio/sleep/relaxation.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
       mindfulnessCategory: MindfulnessCategory.sleep,
       isPremium: true,
     ),
@@ -96,8 +89,7 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       description: 'Quick relief for acute anxiety',
       category: 'Anxiety Relief',
       duration: Duration(minutes: 7),
-      audioUrl: 'https://example.com/audio/anxiety-sos.mp3',
-      localAssetPath: 'assets/audio/anxiety/sos.mp3',
+      audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
       mindfulnessCategory: MindfulnessCategory.anxiety,
     ),
   ];
@@ -206,10 +198,13 @@ class _MindfulnessLibraryScreenState extends State<MindfulnessLibraryScreen> {
       await MindfulnessAudioService().play();
       setState(() => _showPlayer = true);
     } catch (e) {
+      final message = e is MindfulnessAudioSourceException
+          ? e.userMessage
+          : 'Unable to start this track right now. Please try again.';
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to load track'),
+          SnackBar(
+            content: Text(message),
             backgroundColor: AppColors.danger,
           ),
         );
